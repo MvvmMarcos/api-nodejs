@@ -1,0 +1,8 @@
+
+{"date":"2024-07-31T21:51:57.878Z","email":"mvvm@gmail.com","level":"info","message":"Enviado e-mail com instruções para recuperar a senha."}
+{"date":"2024-07-31T21:53:43.614Z","level":"info","message":"Validar token recuperar senha, token válido."}
+{"date":"2024-07-31T21:53:58.616Z","level":"info","message":"Validar token recuperar senha, chave inválido."}
+{"date":"2024-07-31T22:00:21.553Z","level":"info","message":"Erro: Token recuperar senha inválido."}
+{"date":"2024-07-31T22:00:44.103Z","level":"info","message":"Senha editada com sucesso."}
+{"date":"2024-07-31T22:02:24.060Z","level":"info","message":"Senha editada com sucesso."}
+{"date":"2024-07-31T22:02:25.881Z","level":"info","message":"Erro: Token recuperar senha inválido."}
