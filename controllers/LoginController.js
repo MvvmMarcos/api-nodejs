@@ -14,13 +14,11 @@ const logger = require('../services/loggerServices');
 //Enviar e-mail
 const nodemailer = require('nodemailer');
 //cadastrar um usuário
-router.post('/users', eAdmin, async (req, res) => {
+router.post('/new-users', async (req, res) => {
     //receber os dados enviados no corpo da requisição
     const data = req.body;
     //validar os campos utilizando o yup
     const schema = yup.object().shape({
-        situationId: yup.number("Erro: Necessário preencher o campo situação!")
-            .required("Erro: Necessário preencher o campo situação!"),
         password: yup.string("Erro: Necessário preencher o campo senha!")
             .required("Erro: Necessário preencher o campo senha!")
             .min(6, "Erro: A senha deve conter no mínimo 6 caracteres!"),
