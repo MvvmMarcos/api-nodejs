@@ -13,16 +13,75 @@ const db = require('../db/models');
 const logger = require('../services/loggerServices');
 //Enviar e-mail
 const nodemailer = require('nodemailer');
+//cadastrar um usuário
+router.post('/users', eAdmin, async (req, res) => {
+    //receber os dados enviados no corpo da requisição
+    const data = req.body;
+    //validar os campos utilizando o yup
+    const schema = yup.object().shape({
+        situationId: yup.number("Erro: Necessário preencher o campo situação!")
+            .required("Erro: Necessário preencher o campo situação!"),
+        password: yup.string("Erro: Necessário preencher o campo senha!")
+            .required("Erro: Necessário preencher o campo senha!")
+            .min(6, "Erro: A senha deve conter no mínimo 6 caracteres!"),
+        email: yup.string("Erro: Necessário preencher o campo email!")
+            .email("Erro: Necessário preencher o campo email com um válido!")
+            .required("Erro: Necessário preencher o campo email!"),
+        name: yup.string("Erro: Necessário preencher o campo nome!")
+            .required("Erro: Necessário preencher o campo nome!")
+
+    })
+    //verificar se todos os campos passaram pela validatação
+    try {
+        await schema.validate(data)
+    } catch (error) {
+        return res.status(400).json({
+            error: true,
+            message: error.errors
+        })
+    }
+    //recuperar o regisro do banco de dados
+    const user = await db.Users.findOne({
+        //indicar quais colunas recuperar
+        attributes:['id'],
+        where:{email:data.email}
+    })
+    //verificar se ja encontra o registro no banco de dados
+    if(user){
+        return res.status(400).json({
+            error: true,
+            message: "Erro: Este e-mail já está cadastrado!"
+        })
+    }
+    //criptografar a senha
+    data.password = await bcrypt.hash(String(data.password), 8);
+    await db.Users.create(data)
+        .then((dataUser) => {
+            return res.status(200).json({
+                error: false,
+                message: "Usuário cadastrado com sucesso!",
+                dataUser
+            });
+        })
+        .catch(() => {
+            return res.status(400).json({
+                error: true,
+                message: "Erro: Usuário não cadastrado",
+                dataUser
+            })
+        })
+
+})
 //login
 router.post('/login', async (req, res) => {
     //receber os dados
     let data = req.body;
     //validar os campos utilizando o yup
     const schema = yup.object().shape({
-        email: yup.string("Erro: Necessário preencher o campo email!")
-            .required("Erro: Necessário preencher o campo email!"),
         password: yup.string("Erro: Necessário preencher o campo senha!")
-            .required("Erro: Necessário preencher o campo senha!")
+            .required("Erro: Necessário preencher o campo senha!"),
+        email: yup.string("Erro: Necessário preencher o campo email!")
+            .required("Erro: Necessário preencher o campo email!")
     })
     //verificar se todos os campos passram pela validação
     try {
